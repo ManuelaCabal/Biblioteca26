@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle País</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<h2>Detalle del país</h2>
+<p class="nav-links">
+    <a th:href="@{/paises}">Volver al listado</a>
+</p>
+
+<main class="detail-shell">
+    <section class="author-detail-header">
+        <div class="author-badge-row">
+            <span class="author-profile-badge">País</span>
+        </div>
+        <h3 class="author-profile-title" th:text="${item.nomPais != null and !#strings.isEmpty(item.nomPais) ? item.nomPais : 'Sin nombre'}">Nombre del país</h3>
+    </section>
+
+    <section class="card author-profile-card">
+        <div class="author-profile-header">
+            <div class="author-photo-wrap">
+                <img class="bandera-pais"
+                     th:if="${item.banderaPath != null and !#strings.isEmpty(item.banderaPath)}"
+                     th:src="${item.banderaPath}"
+                     th:alt="${'Bandera de ' + item.nomPais}">
+                <div class="autor-view-empty" th:if="${item.banderaPath == null or #strings.isEmpty(item.banderaPath)}">Sin bandera</div>
+            </div>
+
+            <div class="author-profile-content">
+                <div class="author-meta-grid">
+                    <div class="author-meta-item">
+                        <span class="author-meta-label">Nombre</span>
+                        <strong th:text="${item.nomPais != null and !#strings.isEmpty(item.nomPais) ? item.nomPais : '-'}">-</strong>
+                    </div>
+                    <div class="author-meta-item">
+                        <span class="author-meta-label">Autores</span>
+                        <strong th:text="${autoresDelPais != null ? #lists.size(autoresDelPais) : 0}">0</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="table-section">
+        <h3 class="autor-view-title">Autores del país</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Foto</th>
+                <th>
+                    <span class="libros-head-inline">
+                        <span>Autor</span>
+                        <span class="libros-sort-icons">
+                            <a th:href="@{/paises/ver/{id}(id=${item.id},autorOrder='asc')}" title="Ordenar A a Z">▲</a>
+                            <a th:href="@{/paises/ver/{id}(id=${item.id},autorOrder='desc')}" title="Ordenar Z a A">▼</a>
+                        </span>
+                    </span>
+                </th>
+                <th>Año</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${autoresDelPais == null or autoresDelPais.isEmpty()}">
+                <td colspan="3">No hay autores asociados a este país.</td>
+            </tr>
+            <tr th:each="autor : ${autoresDelPais}">
+                <td>
+                    <img class="foto-autor-mini"
+                         th:if="${autor.fotoPath != null and !#strings.isEmpty(autor.fotoPath)}"
+                         th:src="${autor.fotoPath}"
+                         th:alt="${'Foto de ' + autor.nombreCompletoListado}">
+                    <span th:if="${autor.fotoPath == null or #strings.isEmpty(autor.fotoPath)}">-</span>
+                </td>
+                <td th:text="${autor.nombreCompletoListado != null and !#strings.isEmpty(autor.nombreCompletoListado) ? autor.nombreCompletoListado : '-'}"></td>
+                <td th:text="${autor.fNac != null ? #temporals.format(autor.fNac, 'yyyy') : '-'}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="table-section">
+        <h3 class="autor-view-title">Premios del país</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Logo</th>
+                <th>Premio</th>
+                <th>Tipo</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${premiosDelPais == null or premiosDelPais.isEmpty()}">
+                <td colspan="3">No hay premios asociados a este país.</td>
+            </tr>
+            <tr th:each="premio : ${premiosDelPais}">
+                <td>
+                    <img class="logotipo-premio-mini"
+                         th:if="${premio.logotipoPath != null and !#strings.isEmpty(premio.logotipoPath)}"
+                         th:src="${premio.logotipoPath}"
+                         th:alt="${'Logotipo de ' + premio.nomPremio}">
+                    <span th:if="${premio.logotipoPath == null or #strings.isEmpty(premio.logotipoPath)}">-</span>
+                </td>
+                <td th:text="${premio.nomPremio != null and !#strings.isEmpty(premio.nomPremio) ? premio.nomPremio : '-'}"></td>
+                <td th:text="${premio.tipo != null and !#strings.isEmpty(premio.tipo) ? premio.tipo : '-'}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

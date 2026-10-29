@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Autor</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<h2>Detalle del autor</h2>
+<p class="nav-links">
+    <a th:href="@{/autores}">Volver al listado</a> |
+    <a th:href="@{/autores/editar/{id}(id=${item.id})}">Editar autor</a>
+</p>
+
+<main class="detail-shell">
+    <section class="author-detail-header">
+        <div class="author-badge-row">
+            <span class="author-profile-badge">Autor</span>
+        </div>
+        <h3 class="author-profile-title" th:text="${item.nombreCompletoListado}">Nombre del autor</h3>
+    </section>
+
+    <section class="card author-profile-card">
+        <div class="author-profile-header">
+            <div class="author-photo-wrap">
+                <img class="foto-autor"
+                     th:if="${item.fotoPath != null and !#strings.isEmpty(item.fotoPath)}"
+                     th:src="${item.fotoPath}"
+                     th:alt="${'Foto de ' + item.nombreCompletoListado}">
+                <div class="autor-view-empty" th:if="${item.fotoPath == null or #strings.isEmpty(item.fotoPath)}">Sin foto</div>
+            </div>
+
+            <div class="author-profile-content">
+                <div class="author-meta-grid">
+                    <div class="author-meta-item">
+                        <span class="author-meta-label">País</span>
+                        <strong th:text="${item.pais != null ? item.pais.nomPais : '-'}">-</strong>
+                    </div>
+                    <div class="author-meta-item">
+                        <span class="author-meta-label">Localidad</span>
+                        <strong th:text="${item.localidad != null and !#strings.isEmpty(item.localidad) ? item.localidad : '-'}">-</strong>
+                    </div>
+                    <div class="author-meta-item">
+                        <span class="author-meta-label">Nacimiento</span>
+                        <strong th:text="${item.fechaNacimientoEuropea != null and !#strings.isEmpty(item.fechaNacimientoEuropea) ? item.fechaNacimientoEuropea : '-'}">-</strong>
+                    </div>
+                    <div class="author-meta-item">
+                        <span class="author-meta-label">Defunción</span>
+                        <strong th:text="${item.fechaDefuncionEuropea != null and !#strings.isEmpty(item.fechaDefuncionEuropea) ? item.fechaDefuncionEuropea : '-'}">-</strong>
+                    </div>
+                    <div class="author-meta-item">
+                        <span class="author-meta-label">Edad</span>
+                        <strong th:text="${item.edadActual != null ? item.edadActual : '-'}">-</strong>
+                    </div>
+                </div>
+
+                <div class="author-extra-item author-bio-box">
+                    <span class="author-meta-label">Biografía</span>
+                    <p class="autor-view-bio" th:text="${item.biografia != null and !#strings.isEmpty(item.biografia) ? item.biografia : 'Sin biografía registrada.'}"></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="table-section author-table-panel">
+        <h3 class="autor-view-title">Libros del autor</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Portada</th>
+                <th>Título</th>
+                <th>Año</th>
+                <th>Premios</th>
+                <th>Serie</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${librosDelAutor == null or librosDelAutor.isEmpty()}">
+                <td colspan="5">No hay libros asociados.</td>
+            </tr>
+            <tr th:each="libro : ${librosDelAutor}">
+                <td>
+                    <img class="portada-libro-mini"
+                         th:if="${libro.portadaPath != null and !#strings.isEmpty(libro.portadaPath)}"
+                         th:src="${libro.portadaPath}"
+                         th:alt="${'Portada de ' + libro.titulo}">
+                    <span th:if="${libro.portadaPath == null or #strings.isEmpty(libro.portadaPath)}">-</span>
+                </td>
+                <td th:text="${libro.titulo != null and !#strings.isEmpty(libro.titulo) ? libro.titulo : '-'}"></td>
+                <td th:text="${libro.anio != null ? libro.anio : '-'}"></td>
+                <td>
+                    <div class="premios-autor-scroll" th:if="${libro.premios != null and !libro.premios.isEmpty()}">
+                        <div class="premio-autor-item" th:each="premio : ${libro.premios}">
+                            <img class="premio-autor-logo"
+                                 th:if="${premio.logoPath != null and !#strings.isEmpty(premio.logoPath)}"
+                                 th:src="${premio.logoPath}"
+                                 th:alt="${'Logotipo de ' + premio.nombre}">
+                            <span class="premio-autor-texto" th:text="${premio.nombre != null and !#strings.isEmpty(premio.nombre) ? premio.nombre : '-'}"></span>
+                        </div>
+                    </div>
+                    <span th:if="${libro.premios == null or libro.premios.isEmpty()}">-</span>
+                </td>
+                <td th:text="${libro.serie != null and !#strings.isEmpty(libro.serie) ? libro.serie : '-'}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+
+    <section class="table-section author-table-panel">
+        <h3 class="autor-view-title">Premios del autor</h3>
+        <table>
+            <thead>
+            <tr>
+                <th>Logo</th>
+                <th>Premio</th>
+                <th>Año</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${premiosDelAutor == null or premiosDelAutor.isEmpty()}">
+                <td colspan="3">No hay premios asociados.</td>
+            </tr>
+            <tr th:each="premio : ${premiosDelAutor}">
+                <td>
+                    <img class="logotipo-premio-mini"
+                         th:if="${premio.logoPath != null and !#strings.isEmpty(premio.logoPath)}"
+                         th:src="${premio.logoPath}"
+                         th:alt="${'Logotipo de ' + premio.nombre}">
+                    <span th:if="${premio.logoPath == null or #strings.isEmpty(premio.logoPath)}">-</span>
+                </td>
+                <td th:text="${premio.nombre != null and !#strings.isEmpty(premio.nombre) ? premio.nombre : '-'}"></td>
+                <td th:text="${premio.anio != null ? premio.anio : '-'}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </section>
+</main>
+</body>
+</html>

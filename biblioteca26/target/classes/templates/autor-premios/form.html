@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Formulario Autor Premio</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body>
+<h2>Formulario Autor Premio</h2>
+<a th:href="@{/autor-premios}">Volver</a>
+<form th:action="@{/autor-premios/guardar}" th:object="${item}" method="post">
+    <input type="hidden" th:field="*{id}">
+    <div>
+        <label>Autor</label>
+        <select name="autor.id" required>
+            <option value="">--Selecciona--</option>
+            <option th:each="autor : ${autores}" th:value="${autor.id}" th:text="${autor.nomAutor}"
+                    th:selected="${item.autor != null and item.autor.id == autor.id}"></option>
+        </select>
+    </div>
+    <div>
+        <label>Premio</label>
+        <select name="premio.id" required>
+            <option value="">--Selecciona--</option>
+            <option th:each="premio : ${premios}" th:value="${premio.id}" th:text="${premio.nomPremio}"
+                    th:selected="${item.premio != null and item.premio.id == premio.id}"></option>
+        </select>
+    </div>
+    <div><label>Año</label><input type="number" th:field="*{anio}" required></div>
+    <button type="submit">Guardar</button>
+</form>
+</body>
+</html>

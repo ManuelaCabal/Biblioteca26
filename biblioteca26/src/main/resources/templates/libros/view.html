@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Libro</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<h2>Detalle del libro</h2>
+<p class="nav-links">
+    <a th:href="@{/libros}">Volver al listado</a> |
+    <a th:href="@{/libros/editar/{id}(id=${item.id})}">Editar libro</a>
+</p>
+
+<main class="detail-shell">
+    <section class="author-detail-header">
+        <div class="author-badge-row">
+            <span class="author-profile-badge">Libro</span>
+        </div>
+        <h3 class="author-profile-title" th:text="${item.nomLibro != null and !#strings.isEmpty(item.nomLibro) ? item.nomLibro : 'Sin título'}">Título del libro</h3>
+    </section>
+
+    <section class="card author-profile-card">
+        <div class="author-profile-header">
+            <div class="author-photo-wrap">
+                <img class="foto-autor"
+                     th:if="${item.portadaPath != null and !#strings.isEmpty(item.portadaPath)}"
+                     th:src="${item.portadaPath}"
+                     th:alt="${'Portada de ' + item.nomLibro}">
+                <div class="autor-view-empty" th:if="${item.portadaPath == null or #strings.isEmpty(item.portadaPath)}">Sin portada</div>
+            </div>
+
+            <div class="author-profile-content">
+                <div class="author-meta-grid">
+                    <div class="author-meta-item">
+                        <span class="author-meta-label">Año</span>
+                        <strong th:text="${item.ano != null ? item.ano : '-'}">-</strong>
+                    </div>
+                    <div class="author-meta-item">
+                        <span class="author-meta-label">Serie</span>
+                        <strong th:text="${item.serie != null ? item.serie.denominacion : '-'}">-</strong>
+                    </div>
+                    <div class="author-meta-item">
+                        <span class="author-meta-label">Índice</span>
+                        <strong th:text="${item.indiceSerie != null ? item.indiceSerie : '-'}">-</strong>
+                    </div>
+                    <div class="author-meta-item">
+                        <span class="author-meta-label">Película</span>
+                        <strong th:text="${item.pelicula != null and !#strings.isEmpty(item.pelicula) ? item.pelicula : '-'}">-</strong>
+                    </div>
+                </div>
+
+                <div class="author-extra-item author-bio-box">
+                    <span class="author-meta-label">Comentario</span>
+                    <p class="autor-view-bio" th:text="${item.comentario != null and !#strings.isEmpty(item.comentario) ? item.comentario : 'Sin comentario registrado.'}"></p>
+                </div>
+
+                <div class="author-extra-item author-bio-box">
+                    <span class="author-meta-label">Archivo PDF</span>
+                    <div class="book-file-actions">
+                        <a th:if="${item.archivoPdfPath != null and !#strings.isEmpty(item.archivoPdfPath)}"
+                           th:href="${item.archivoPdfPath}"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="pdf-link">Abrir PDF</a>
+                        <span th:if="${item.archivoPdfPath == null or #strings.isEmpty(item.archivoPdfPath)}">No hay PDF asociado.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+</body>
+</html>

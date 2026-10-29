@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario Libro</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<h2>Formulario Libro</h2>
+<a th:href="@{/libros}">Volver</a>
+<form th:action="@{/libros/guardar}" th:object="${item}" method="post" class="libro-form">
+    <input type="hidden" th:field="*{id}">
+
+    <div class="libro-form-grid">
+        <div class="libro-field">
+            <label>Título</label>
+            <input type="text" th:field="*{nomLibro}" required>
+        </div>
+        <div class="libro-field">
+            <label>Año</label>
+            <input type="number" th:field="*{ano}" required>
+        </div>
+        <div class="libro-field">
+            <label>Portada</label>
+            <input type="text" th:field="*{portada}">
+        </div>
+        <div class="libro-field">
+            <label>Archivo</label>
+            <input type="text" th:field="*{nomArchivo}">
+        </div>
+        <div class="libro-field">
+            <label>Pelicula</label>
+            <input type="text" th:field="*{pelicula}">
+        </div>
+        <div class="libro-field">
+            <label>Serie</label>
+            <select name="serie.id">
+                <option value="">--Sin serie--</option>
+                <option th:each="serie : ${series}" th:value="${serie.id}" th:text="${serie.denominacion}"
+                        th:selected="${item.serie != null and item.serie.id == serie.id}"></option>
+            </select>
+        </div>
+        <div class="libro-field">
+            <label>Índice serie</label>
+            <input type="number" th:field="*{indiceSerie}" required>
+        </div>
+        <div class="libro-field libro-field-full">
+            <label>Comentario</label>
+            <textarea th:field="*{comentario}"></textarea>
+        </div>
+    </div>
+
+    <div class="libro-form-actions">
+        <button type="submit">Guardar</button>
+    </div>
+</form>
+</body>
+</html>

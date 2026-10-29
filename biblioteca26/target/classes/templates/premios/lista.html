@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Premios</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body>
+<h2>Premios</h2>
+<p class="nav-links"><a th:href="@{/}">Inicio</a> | <a th:href="@{/premios/nuevo}">Nuevo</a></p>
+
+<div class="autores-toolbar">
+    <div></div>
+    <div class="autores-search-actions">
+        <a class="search-reset-button" th:href="@{/premios}" th:style="${tipoFiltro == '' ? 'outline:2px solid rgba(147,197,253,.6);' : ''}">Todos</a>
+        <a class="search-reset-button" th:href="@{/premios(tipo='A')}" th:style="${tipoFiltro == 'A' ? 'outline:2px solid rgba(147,197,253,.6);' : ''}">Tipo A</a>
+        <a class="search-reset-button" th:href="@{/premios(tipo='L')}" th:style="${tipoFiltro == 'L' ? 'outline:2px solid rgba(147,197,253,.6);' : ''}">Tipo L</a>
+    </div>
+</div>
+
+<table border="1">
+    <tr><th>ID</th><th>Nombre</th><th>Logotipo</th><th>Pais</th><th>Tipo</th><th>Acciones</th></tr>
+    <tr th:each="item : ${items}">
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.nomPremio}"></td>
+        <td>
+            <img class="logotipo-premio-mini"
+                 th:if="${item.logotipoPath != null and !#strings.isEmpty(item.logotipoPath)}"
+                 th:src="${item.logotipoPath}"
+                 th:alt="${'Logotipo de ' + item.nomPremio}">
+            <span th:if="${item.logotipoPath == null or #strings.isEmpty(item.logotipoPath)}">-</span>
+        </td>
+        <td th:text="${item.pais != null ? item.pais.nomPais : ''}"></td>
+        <td th:text="${item.tipo}"></td>
+        <td>
+            <a th:href="@{/premios/ver/{id}(id=${item.id})}">Ver</a>
+            <a th:href="@{/premios/editar/{id}(id=${item.id})}">Editar</a>
+            <a th:href="@{/premios/eliminar/{id}(id=${item.id})}">Eliminar</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Detalle Premio</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body>
+<h2>Detalle Premio</h2>
+<p class="nav-links"><a th:href="@{/premios}">Volver al listado</a></p>
+<ul class="card">
+    <li><strong>ID:</strong> <span th:text="${item.id}"></span></li>
+    <li><strong>Nombre:</strong> <span th:text="${item.nomPremio}"></span></li>
+    <li>
+        <strong>Logotipo:</strong>
+        <img class="logotipo-premio"
+             th:if="${item.logotipoPath != null and !#strings.isEmpty(item.logotipoPath)}"
+             th:src="${item.logotipoPath}"
+             th:alt="${'Logotipo de ' + item.nomPremio}">
+        <span th:if="${item.logotipoPath == null or #strings.isEmpty(item.logotipoPath)}">-</span>
+    </li>
+    <li><strong>País:</strong> <span th:text="${item.pais != null ? item.pais.nomPais : ''}"></span></li>
+    <li><strong>Tipo:</strong> <span th:text="${item.tipo}"></span></li>
+</ul>
+
+<section class="table-section" style="margin-top:16px;">
+    <h3 class="autor-view-title">Autores que han ganado este premio</h3>
+    <table>
+        <thead>
+        <tr>
+            <th>Foto</th>
+            <th>Autor</th>
+            <th>Logotipo del premio</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:if="${autoresGanadores == null or autoresGanadores.isEmpty()}">
+            <td colspan="3">No hay autores asociados a este premio.</td>
+        </tr>
+        <tr th:each="autorGanador : ${autoresGanadores}">
+            <td>
+                <img class="foto-autor-mini"
+                     th:if="${autorGanador.fotoPath != null and !#strings.isEmpty(autorGanador.fotoPath)}"
+                     th:src="${autorGanador.fotoPath}"
+                     th:alt="${'Foto de ' + autorGanador.nombreAutor}">
+                <span th:if="${autorGanador.fotoPath == null or #strings.isEmpty(autorGanador.fotoPath)}">-</span>
+            </td>
+            <td th:text="${autorGanador.nombreAutor != null and !#strings.isEmpty(autorGanador.nombreAutor) ? autorGanador.nombreAutor : '-'}"></td>
+            <td>
+                <img class="logotipo-premio-mini"
+                     th:if="${autorGanador.logotipoPremioPath != null and !#strings.isEmpty(autorGanador.logotipoPremioPath)}"
+                     th:src="${autorGanador.logotipoPremioPath}"
+                     th:alt="${'Logotipo de ' + item.nomPremio}">
+                <span th:if="${autorGanador.logotipoPremioPath == null or #strings.isEmpty(autorGanador.logotipoPremioPath)}">-</span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</section>
+</body>
+</html>

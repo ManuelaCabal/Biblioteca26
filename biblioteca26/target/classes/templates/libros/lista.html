@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Libros</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body>
+<h2>Libros</h2>
+<div class="libros-toolbar">
+    <p class="nav-links"><a th:href="@{/}">Inicio</a> | <a th:href="@{/libros/nuevo}">Nuevo</a></p>
+    <form class="libros-search" th:action="@{/libros}" method="get">
+        <input type="hidden" name="sort" th:value="${sortField}">
+        <input type="hidden" name="dir" th:value="${sortDir}">
+        <input type="text" name="q" th:value="${searchTitulo}" placeholder="Buscar por título">
+        <input type="text" name="qa" th:value="${searchAutor}" placeholder="Buscar por autor">
+        <input type="text" name="qp" th:value="${searchPremio}" placeholder="Buscar por premio">
+        <button type="submit">Buscar</button>
+        <button type="submit" th:href="@{/libros}">Limpiar</button>
+    </form>
+</div> 
+<table border="1">
+    <tr>
+        <th>Portada</th>
+        <th>
+            <span class="libros-head-inline">
+                <span>Título</span>
+            </span>
+            <a th:href="@{/libros(sort='titulo',dir='asc',q=${searchTitulo},qa=${searchAutor},qp=${searchPremio},page=${currentPage})}" title="Orden ascendente">▲</a>
+            <a th:href="@{/libros(sort='titulo',dir='desc',q=${searchTitulo},qa=${searchAutor},qp=${searchPremio},page=${currentPage})}" title="Orden descendente">▼</a>
+        </th>
+        <th>
+            <span class="libros-head-inline">
+                <span>Año</span>
+                <span class="libros-sort-icons">
+                    <a th:href="@{/libros(sort='ano',dir='asc',q=${searchTitulo},qa=${searchAutor},qp=${searchPremio},page=${currentPage})}" title="Orden ascendente">▲</a>
+                    <a th:href="@{/libros(sort='ano',dir='desc',q=${searchTitulo},qa=${searchAutor},qp=${searchPremio},page=${currentPage})}" title="Orden descendente">▼</a>
+                </span>
+            </span>
+        </th>
+        <th>Serie</th>
+        <th>Autores</th>
+        <th>Premios</th>
+        <th>Archivo</th>
+        <th>Acciones</th>
+    </tr>
+    <tr th:each="item : ${items}">
+        <td>
+            <img class="portada-libro-mini"
+                 th:if="${item.portada != null and !#strings.isEmpty(item.portada)}"
+                 th:src="@{/img/libros/{archivo}(archivo=${item.portada})}"
+                 th:alt="${'Portada de ' + item.nomLibro}">
+            <span th:if="${item.portada == null or #strings.isEmpty(item.portada)}">-</span>
+        </td>
+        <td th:text="${item.nomLibro}"></td>
+        <td>
+            <span th:text="${item.ano != null ? item.ano : '-'}"></span>
+        </td>
+        <td th:text="${item.serie != null ? item.serie.denominacion : ''}"></td>
+        <td>
+            <div class="libros-autor-scroll" th:if="${autoresPorLibro[item.id] != null and !autoresPorLibro[item.id].isEmpty()}">
+                <div class="libro-autor-item" th:each="autor : ${autoresPorLibro[item.id]}" th:text="${autor.nombre}"></div>
+            </div>
+            <span th:if="${autoresPorLibro[item.id] == null or autoresPorLibro[item.id].isEmpty()}">-</span>
+        </td>
+        <td>
+            <div class="premios-autor-scroll" th:if="${premiosPorLibro[item.id] != null and !premiosPorLibro[item.id].isEmpty()}">
+                <div class="premio-autor-item" th:each="premio : ${premiosPorLibro[item.id]}">
+                    <img class="premio-autor-logo"
+                         th:if="${premio.logoPath != null and !#strings.isEmpty(premio.logoPath)}"
+                         th:src="${premio.logoPath}"
+                         th:alt="${'Logotipo de ' + premio.nombre}">
+                    <span class="premio-autor-texto" th:text="${premio.nombre}"></span>
+                </div>
+            </div>
+            <span th:if="${premiosPorLibro[item.id] == null or premiosPorLibro[item.id].isEmpty()}">-</span>
+        </td>
+        <td>
+            <a th:if="${archivosPorLibro[item.id] != null}"
+               th:href="@{/pdfs/{archivo}(archivo=${archivosPorLibro[item.id].path})}"
+               th:text="${archivosPorLibro[item.id].label}"
+               target="_blank"></a>
+            <span th:if="${archivosPorLibro[item.id] == null}">-</span>
+        </td>
+        <td class="libros-actions-cell">
+            <div class="libros-acciones">
+                <a class="icon-action icon-view" th:href="@{/libros/ver/{id}(id=${item.id})}" title="Ver" aria-label="Ver">👁</a>
+                <a class="icon-action icon-edit" th:href="@{/libros/editar/{id}(id=${item.id})}" title="Editar" aria-label="Editar">✎</a>
+                <a class="icon-action icon-delete" th:href="@{/libros/eliminar/{id}(id=${item.id})}" title="Eliminar" aria-label="Eliminar">🗑</a>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div class="pagination" th:if="${totalPages > 1}">
+    <a th:if="${currentPage > 1}" th:href="@{/libros(page=1,sort=${sortField},dir=${sortDir},q=${searchTitulo},qa=${searchAutor},qp=${searchPremio})}" title="Primera página">⏮</a>
+    <a th:if="${currentPage > 1}" th:href="@{/libros(page=${currentPage - 1},sort=${sortField},dir=${sortDir},q=${searchTitulo},qa=${searchAutor},qp=${searchPremio})}" title="Página anterior">◀</a>
+
+    <a th:each="pageNum : ${pageNumbers}"
+       th:classappend="${pageNum == currentPage} ? 'active' : ''"
+       th:href="@{/libros(page=${pageNum},sort=${sortField},dir=${sortDir},q=${searchTitulo},qa=${searchAutor},qp=${searchPremio})}"
+       th:text="${pageNum}"></a>
+
+    <a th:if="${currentPage < totalPages}" th:href="@{/libros(page=${currentPage + 1},sort=${sortField},dir=${sortDir},q=${searchTitulo},qa=${searchAutor},qp=${searchPremio})}" title="Página siguiente">▶</a>
+    <a th:if="${currentPage < totalPages}" th:href="@{/libros(page=${totalPages},sort=${sortField},dir=${sortDir},q=${searchTitulo},qa=${searchAutor},qp=${searchPremio})}" title="Última página">⏭</a>
+</div>
+</body>
+</html>

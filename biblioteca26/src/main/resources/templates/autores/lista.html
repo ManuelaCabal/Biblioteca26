@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Autores</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body>
+<h2>Autores</h2>
+<div class="autores-toolbar">
+    <p class="nav-links"><a th:href="@{/}">Inicio</a> | <a th:href="@{/autores/nuevo}">Nuevo</a></p>
+    <form class="autores-search" th:action="@{/autores}" method="get">
+        <input type="hidden" name="dir" th:value="${sortDir}">
+        <input type="text" name="q" th:value="${searchQuery}" placeholder="Buscar por nombre o apellidos">
+        <input type="text" name="qp" th:value="${searchPremioQuery}" placeholder="Buscar por premio">
+        <button type="submit">Buscar</button>
+        <button type="submit" th:href="@{/autores}">Limpiar</button>
+    </form>
+</div>
+<table border="1">
+    <tr>
+        <th>Foto</th>
+        <th>
+            Nombre
+        </th>
+        <th>País</th>
+        <th>
+            Fecha nacimiento
+            <a th:href="@{/autores(dir='asc',q=${searchQuery},qp=${searchPremioQuery})}" title="Orden ascendente">▲</a>
+            <a th:href="@{/autores(dir='desc',q=${searchQuery},qp=${searchPremioQuery})}" title="Orden descendente">▼</a>
+        </th>
+        <th>Fecha defunción</th><th>Edad</th><th>Libros</th><th>Premios</th><th>Acciones</th>
+    </tr>
+    <tr th:each="item : ${items}">
+        <td>
+            <a href="#"
+               class="foto-autor-link"
+               th:if="${item.fotoPath != null and !#strings.isEmpty(item.fotoPath)}"
+               th:attr="data-foto=${item.fotoPath},data-alt=${'Foto de ' + item.nombreCompletoListado}">
+                <img class="foto-autor-mini"
+                     th:src="${item.fotoPath}"
+                     th:alt="${'Foto de ' + item.nombreCompletoListado}">
+            </a>
+            <span th:if="${item.fotoPath == null or #strings.isEmpty(item.fotoPath)}">-</span>
+        </td>
+        <td th:text="${item.nombreCompletoListado}"></td>
+        <td>
+            <span th:text="${item.pais != null ? item.pais.nomPais : ''}"></span>
+              <img th:if="${item.pais != null and item.pais.banderaPath != null and !#strings.isEmpty(item.pais.banderaPath)}"
+                  th:src="${item.pais.banderaPath}"
+                 th:alt="${item.pais != null ? item.pais.nomPais : 'Bandera'}"
+                 style="height:20px; margin-left:8px; vertical-align:middle;">
+        </td>
+        <td th:text="${item.fechaNacimientoEuropea}"></td>
+        <td th:text="${item.fechaDefuncionEuropea}"></td>
+        <td th:text="${item.edadActual != null ? item.edadActual : ''}"></td>
+        <td>
+            <div class="libros-autor-scroll" th:if="${librosPorAutor[item.id] != null and !librosPorAutor[item.id].isEmpty()}">
+                <div class="libro-autor-item" th:each="libro : ${librosPorAutor[item.id]}">
+                    <span th:text="${libro.titulo}"></span>
+                    <span th:text="${libro.ano != null ? ' (' + libro.ano + ')' : ''}"></span>
+                </div>
+            </div>
+            <span th:if="${librosPorAutor[item.id] == null or librosPorAutor[item.id].isEmpty()}">-</span>
+        </td>
+        <td>
+            <div class="premios-autor-scroll" th:if="${premiosPorAutor[item.id] != null and !premiosPorAutor[item.id].isEmpty()}">
+                <div class="premio-autor-item" th:each="premio : ${premiosPorAutor[item.id]}">
+                    <img class="premio-autor-logo"
+                         th:if="${premio.logoPath != null and !#strings.isEmpty(premio.logoPath)}"
+                         th:src="${premio.logoPath}"
+                         th:alt="${'Logotipo de ' + premio.nombre}">
+                    <span class="premio-autor-texto">
+                        <span th:text="${premio.nombre}"></span>
+                        <span th:text="${premio.anio != null ? ' (' + premio.anio + ')' : ''}"></span>
+                    </span>
+                </div>
+            </div>
+            <span th:if="${premiosPorAutor[item.id] == null or premiosPorAutor[item.id].isEmpty()}">-</span>
+        </td>
+        <td class="autores-actions-cell">
+            <div class="autores-acciones">
+                <a class="icon-action icon-view" th:href="@{/autores/ver/{id}(id=${item.id})}" title="Ver" aria-label="Ver">👁</a>
+                <a class="icon-action icon-edit" th:href="@{/autores/editar/{id}(id=${item.id})}" title="Editar" aria-label="Editar">✎</a>
+                <a class="icon-action icon-delete" th:href="@{/autores/eliminar/{id}(id=${item.id})}" title="Eliminar" aria-label="Eliminar">🗑</a>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div class="pagination" th:if="${totalPages > 1}">
+    <a th:if="${currentPage > 1}" th:href="@{/autores(page=1,dir=${sortDir},q=${searchQuery},qp=${searchPremioQuery})}" title="Primera página">⏮</a>
+    <a th:if="${currentPage > 1}" th:href="@{/autores(page=${currentPage - 1},dir=${sortDir},q=${searchQuery},qp=${searchPremioQuery})}" title="Página anterior">◀</a>
+
+    <a th:each="pageNum : ${pageNumbers}"
+       th:classappend="${pageNum == currentPage} ? 'active' : ''"
+       th:href="@{/autores(page=${pageNum},dir=${sortDir},q=${searchQuery},qp=${searchPremioQuery})}"
+       th:text="${pageNum}"></a>
+
+    <a th:if="${currentPage < totalPages}" th:href="@{/autores(page=${currentPage + 1},dir=${sortDir},q=${searchQuery},qp=${searchPremioQuery})}" title="Página siguiente">▶</a>
+    <a th:if="${currentPage < totalPages}" th:href="@{/autores(page=${totalPages},dir=${sortDir},q=${searchQuery},qp=${searchPremioQuery})}" title="Última página">⏭</a>
+</div>
+
+<div id="modalFotoAutor" class="modal-foto-autor" aria-hidden="true">
+    <div class="modal-foto-autor-overlay" data-close-modal="true"></div>
+    <div class="modal-foto-autor-content" role="dialog" aria-modal="true" aria-label="Foto del autor">
+        <button type="button" class="modal-foto-autor-close" id="cerrarModalFotoAutor" aria-label="Cerrar">×</button>
+        <img id="modalFotoAutorImg" src="" alt="Foto del autor">
+    </div>
+</div>
+
+<script>
+    (() => {
+        const modal = document.getElementById('modalFotoAutor');
+        const modalImg = document.getElementById('modalFotoAutorImg');
+        const closeButton = document.getElementById('cerrarModalFotoAutor');
+        const photoLinks = document.querySelectorAll('.foto-autor-link');
+
+        if (!modal || !modalImg || !closeButton || photoLinks.length === 0) {
+            return;
+        }
+
+        const openModal = (src, alt) => {
+            modalImg.src = src;
+            modalImg.alt = alt || 'Foto del autor';
+            modal.classList.add('open');
+            modal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closeModal = () => {
+            modal.classList.remove('open');
+            modal.setAttribute('aria-hidden', 'true');
+            modalImg.src = '';
+            document.body.style.overflow = '';
+        };
+
+        photoLinks.forEach((link) => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const src = link.getAttribute('data-foto');
+                const alt = link.getAttribute('data-alt');
+                if (!src) {
+                    return;
+                }
+                openModal(src, alt);
+            });
+        });
+
+        closeButton.addEventListener('click', closeModal);
+        modal.addEventListener('click', (event) => {
+            if (event.target.hasAttribute('data-close-modal')) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && modal.classList.contains('open')) {
+                closeModal();
+            }
+        });
+    })();
+</script>
+</body>
+</html>

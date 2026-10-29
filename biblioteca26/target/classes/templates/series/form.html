@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Formulario Serie</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body>
+<h2>Formulario Serie</h2>
+<a th:href="@{/series}">Volver</a>
+<form th:action="@{/series/guardar}" th:object="${item}" method="post">
+    <input type="hidden" th:field="*{id}">
+    <div><label>Denominacion</label><input type="text" th:field="*{denominacion}" required></div>
+    <button type="submit">Guardar</button>
+</form>
+</body>
+</html>

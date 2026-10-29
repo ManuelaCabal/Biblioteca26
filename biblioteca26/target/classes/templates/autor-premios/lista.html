@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Autor Premio</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body>
+<h2>Autor Premio</h2>
+<a th:href="@{/}">Inicio</a> | <a th:href="@{/autor-premios/nuevo}">Nuevo</a>
+<table border="1">
+    <tr><th>ID</th><th>Autor</th><th>Premio</th><th>Año</th><th>Acciones</th></tr>
+    <tr th:each="item : ${items}">
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.autor != null ? item.autor.nomAutor : ''}"></td>
+        <td th:text="${item.premio != null ? item.premio.nomPremio : ''}"></td>
+        <td th:text="${item.anio}"></td>
+        <td>
+            <a th:href="@{/autor-premios/ver/{id}(id=${item.id})}">Ver</a>
+            <a th:href="@{/autor-premios/editar/{id}(id=${item.id})}">Editar</a>
+            <a th:href="@{/autor-premios/eliminar/{id}(id=${item.id})}">Eliminar</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

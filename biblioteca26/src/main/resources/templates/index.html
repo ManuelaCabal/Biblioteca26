@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biblioteca26</title>
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+<h1>Biblioteca26</h1>
+<p class="nav-links">Gestión integral de datos: CRUD de autores, libros, países, premios y relaciones.</p>
+<ul>
+    <li><a th:href="@{/paises}">Paises</a></li>
+    <li><a th:href="@{/series}">Series</a></li>
+    <li><a th:href="@{/autores}">Autores</a></li>
+    <li><a th:href="@{/premios}">Premios</a></li>
+    <li><a th:href="@{/libros}">Libros</a></li>
+    <li><a th:href="@{/autor-libros}">Autor Libros</a></li>
+    <li><a th:href="@{/autor-premios}">Autor Premios</a></li>
+    <li><a th:href="@{/libro-premios}">Libro Premios</a></li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Detalle Autor Premio</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body>
+<h2>Detalle Autor Premio</h2>
+<a th:href="@{/autor-premios}">Volver al listado</a>
+<ul>
+    <li><strong>ID:</strong> <span th:text="${item.id}"></span></li>
+    <li><strong>Autor:</strong> <span th:text="${item.autor != null ? item.autor.nomAutor : ''}"></span></li>
+    <li><strong>Premio:</strong> <span th:text="${item.premio != null ? item.premio.nomPremio : ''}"></span></li>
+    <li><strong>Año:</strong> <span th:text="${item.anio}"></span></li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Paises</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body>
+<h2>Paises</h2>
+<p class="nav-links"><a th:href="@{/}">Inicio</a> | <a th:href="@{/paises/nuevo}">Nuevo</a></p>
+<table border="1">
+    <tr><th>ID</th><th>Nombre</th><th>Bandera</th><th>Acciones</th></tr>
+    <tr th:each="item : ${items}">
+        <td th:text="${item.id}"></td>
+        <td th:text="${item.nomPais}"></td>
+        <td>
+            <img class="bandera"
+                 th:if="${item.banderaPath != null and !#strings.isEmpty(item.banderaPath)}"
+                 th:src="${item.banderaPath}"
+                 th:alt="${'Bandera de ' + item.nomPais}">
+            <span th:if="${item.banderaPath == null or #strings.isEmpty(item.banderaPath)}">-</span>
+        </td>
+        <td>
+            <a th:href="@{/paises/ver/{id}(id=${item.id})}">Ver</a>
+            <a th:href="@{/paises/editar/{id}(id=${item.id})}">Editar</a>
+            <a th:href="@{/paises/eliminar/{id}(id=${item.id})}">Eliminar</a>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

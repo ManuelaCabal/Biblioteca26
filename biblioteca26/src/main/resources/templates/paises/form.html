@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Formulario Pais</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body>
+<h2>Formulario Pais</h2>
+<a th:href="@{/paises}">Volver</a>
+<form th:action="@{/paises/guardar}" th:object="${item}" method="post">
+    <input type="hidden" th:field="*{id}">
+    <div><label>Nombre</label><input type="text" th:field="*{nomPais}"></div>
+    <div><label>Bandera</label><input type="text" th:field="*{bandera}"></div>
+    <button type="submit">Guardar</button>
+</form>
+</body>
+</html>

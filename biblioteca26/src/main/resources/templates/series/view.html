@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Detalle Serie</title><link rel="stylesheet" th:href="@{/css/app.css}"></head>
+<body>
+<h2>Detalle Serie</h2>
+<a th:href="@{/series}">Volver al listado</a>
+<ul>
+    <li><strong>ID:</strong> <span th:text="${item.id}"></span></li>
+    <li><strong>Denominación:</strong> <span th:text="${item.denominacion}"></span></li>
+</ul>
+</body>
+</html>
